@@ -18,7 +18,7 @@ public class Board implements Grid {
 
     private Picture tile;
     private Picture[][] boardImages = new Picture[3][3];
-    private Picture[][] boardPiece = new Picture[3][3];
+    private String[][] boardPiece = new String[3][3];
 
     private final int WIDTH = 45;
     private final int HEIGHT = 45;
@@ -114,7 +114,7 @@ public class Board implements Grid {
                 '}';
     }
 
-    public Picture[][] getBoardPiece() {
+    public String[][] getBoardPiece() {
         return boardPiece;
     }
 }
