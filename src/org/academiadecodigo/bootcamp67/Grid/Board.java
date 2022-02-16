@@ -1,5 +1,6 @@
 package org.academiadecodigo.bootcamp67.Grid;
 
+import org.academiadecodigo.bootcamp67.Piece;
 import org.academiadecodigo.bootcamp67.Position;
 import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
@@ -17,6 +18,7 @@ public class Board implements Grid {
 
     private Picture tile;
     private Picture[][] boardImages = new Picture[3][3];
+    private Picture[][] boardPiece = new Picture[3][3];
 
     private final int WIDTH = 45;
     private final int HEIGHT = 45;
@@ -24,6 +26,7 @@ public class Board implements Grid {
     private final double UPPER_LIMIT_DIST = 17.5;
     private int rows;
     private int cols;
+    private Piece piece;
     private Position pos;
 
     public Board() {
@@ -109,5 +112,9 @@ public class Board implements Grid {
                 ", cols=" + cols +
                 ", pos=" + pos +
                 '}';
+    }
+
+    public Picture[][] getBoardPiece() {
+        return boardPiece;
     }
 }

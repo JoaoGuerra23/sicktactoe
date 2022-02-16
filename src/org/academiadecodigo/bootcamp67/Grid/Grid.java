@@ -24,10 +24,6 @@ public interface Grid {
 
     public double getX();
 
-    /*public int getCELL_SIZE() {
-        return CELL_SIZE;
-    }*/
-
     public void setCols(int cols);
 
     public void setRows(int rows);

@@ -21,6 +21,8 @@ public class Background implements Grid {
     public Background() {
         this.background = new Rectangle(PADDING, PADDING, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
         background.draw();
+        Picture backgroundPic = new Picture(PADDING, PADDING, "Background.png");
+        backgroundPic.draw();
     }
 
     public double rowToY(double rows) {

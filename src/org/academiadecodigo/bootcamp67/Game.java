@@ -13,26 +13,28 @@ public class Game {
     private int player2Score;
 
     public Game() {
-        this.background = new Background();
-        this.topRow = new TopRow();
-        this.bottomRow = new BottomRow();
-        this.board = new Board();
+        Controls mouse = new Controls(this);
+        //this.background = new Background();
+        //this.topRow = new TopRow();
+        //this.bottomRow = new BottomRow();
+        //this.board = new Board();
     }
 
     public void start() {
-        validBoardCell();
+        /*validBoardCell();
         System.out.println("-----");
         validTopRowCell();
         System.out.println("-----");
-        validBottomRowCell();
+        validBottomRowCell();*/
     }
 
     public void initializer() {
-        Controls mouse = new Controls(this);
-        start();
+        //Controls mouse = new Controls(this);
+        //start();
     }
 
-    public void validBoardCell() {
+    /*public void validBoardCell() {
+        this.board = new Board();
         for (int i = 0; i < 1; i++) {
             for (int j = 0; j < board.getCells().length; j++) {
                 System.out.println(board.getCells()[0][0]);
@@ -72,11 +74,11 @@ public class Game {
                 System.out.println(bottomRow.getCells()[0][5]);
             }
         }
-    }
+    }*/
 
     //WIN CONDITIONS
 
-    public boolean isWinner(){
+    /*public boolean isWinner(){
         //TOP ROW
         if((board.getRows() == 0 && board.getCols() == 0) && (board.getRows() == 0 && board.getCols() == 1) && (board.getRows() == 0 && board.getCols() == 2))
             return true;
@@ -106,7 +108,7 @@ public class Game {
             return true;
 
         return false;
-    }
+    }*/
 
    /* public Object getGrid() {
         return board;

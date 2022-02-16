@@ -4,28 +4,35 @@ import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public enum Piece {
 
-    O_ONE(1, new Picture(230, 45, "blue_x100.png"));
-    /*O_TWO(2),
-    O_THREE(3),
-    O_FOUR(4),
-    O_FIVE(5),
-    O_SIX(6),
-    X_ONE(1),
-    X_TWO(2),
-    X_THREE(3),
-    X_FOUR(4),
-    X_FIVE(5),
-    X_SIX(6);*/
+    O_ONE("O", 1, new Picture(210, 45, "O1.png")),
+    O_TWO("O", 2, new Picture( 310, 45, "O2.png")),
+    O_THREE("O", 3, new Picture( 410, 45, "O3.png")),
+    O_FOUR("O", 4, new Picture( 510, 45, "O4.png")),
+    O_FIVE("O", 5, new Picture( 610, 45, "O5.png")),
+    O_SIX("O", 6, new Picture( 710, 45, "O6.png")),
 
+    X_ONE("X", 1, new Picture( 210, 675, "X1.png")),
+    X_TWO("X", 2, new Picture( 310, 675, "X2.png")),
+    X_THREE("X", 3, new Picture( 410, 675, "X3.png")),
+    X_FOUR("X", 4, new Picture( 510, 675, "X4.png")),
+    X_FIVE("X", 5, new Picture( 610, 675, "X5.png")),
+    X_SIX("X", 6, new Picture( 710, 675, "X6.png"));
+
+    private String type;
     private int value;
     private Picture picture;
 
-    Piece(int value, Picture picture) {
+    Piece(String type, int value, Picture picture) {
+        this.type = type;
         this.value = value;
-        this.picture = picture;
+        this.setPicture(picture);
     }
 
     public Picture getPicture() {
         return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
     }
 }

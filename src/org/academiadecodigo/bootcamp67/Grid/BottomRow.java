@@ -1,5 +1,6 @@
 package org.academiadecodigo.bootcamp67.Grid;
 
+import org.academiadecodigo.bootcamp67.Piece;
 import org.academiadecodigo.bootcamp67.Position;
 import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
@@ -14,6 +15,7 @@ public class BottomRow implements Grid {
     private Rectangle[][] cells = new Rectangle[1][6];
 
     private Picture[][] rowImages = new Picture[1][6];
+    private Picture[][] rowPiece = new Picture[1][6];
 
     private final int WIDTH = 60;
     private final int HEIGHT = 10;
@@ -27,6 +29,18 @@ public class BottomRow implements Grid {
         this.bottomRow = new Rectangle(PADDING + (LEFT_LIMIT_DIST * CELL_SIZE), PADDING + (UPPER_LIMIT_DIST * CELL_SIZE), WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
         bottomRow.draw();
         createCells();
+        getRowPiece()[0][0] = Piece.X_ONE.getPicture();
+        getRowPiece()[0][0].draw();
+        getRowPiece()[0][1] = Piece.X_TWO.getPicture();
+        getRowPiece()[0][1].draw();
+        getRowPiece()[0][2] = Piece.X_THREE.getPicture();
+        getRowPiece()[0][2].draw();
+        getRowPiece()[0][3] = Piece.X_FOUR.getPicture();
+        getRowPiece()[0][3].draw();
+        getRowPiece()[0][4] = Piece.X_FIVE.getPicture();
+        getRowPiece()[0][4].draw();
+        getRowPiece()[0][5] = Piece.X_SIX.getPicture();
+        getRowPiece()[0][5].draw();
     }
 
     public void createCells() {
@@ -89,4 +103,7 @@ public class BottomRow implements Grid {
         return cells;
     }
 
+    public Picture[][] getRowPiece() {
+        return rowPiece;
+    }
 }
