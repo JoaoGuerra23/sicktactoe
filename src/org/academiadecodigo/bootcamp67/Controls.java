@@ -27,7 +27,9 @@ public class Controls implements MouseHandler, KeyboardHandler{
     private Picture cellPicture;
     private int clickCounterX = 0;
     private int clickCounterO = 0;
-    private int 
+    private int turnCounter = 0;
+    private boolean playerXturn = true;
+    private boolean playerOturn = false;
     private boolean Xwins = false;
     private boolean Owins = false;
 
@@ -104,186 +106,190 @@ public class Controls implements MouseHandler, KeyboardHandler{
 
 
         /** ----- TOP ROW CELLS ----- **/
-        if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O1TopCell.equals(Piece.O_ONE.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O1TopCell;
-                    Picture coverUp = new Picture(O1TopCell.getX(), O1TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.O_ONE.setPicture(new Picture(230, 45, "tile1.png"));
-                    System.out.println("apagou esta merda");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+        if (playerOturn) {
+            if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O1TopCell.equals(Piece.O_ONE.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O1TopCell;
+                        Picture coverUp = new Picture(O1TopCell.getX(), O1TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.O_ONE.setPicture(new Picture(230, 45, "tile1.png"));
+                        System.out.println("apagou esta merda");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 310 + PADDING && e.getX() <= 405 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O2TopCell.equals(Piece.O_TWO.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O2TopCell;
-                    Picture coverUp = new Picture(O2TopCell.getX(), O2TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.O_TWO.setPicture(new Picture(330, 45, "tile1.png"));
-                    System.out.println("apagou esta shit");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+            if ((e.getX() >= 310 + PADDING && e.getX() <= 405 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O2TopCell.equals(Piece.O_TWO.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O2TopCell;
+                        Picture coverUp = new Picture(O2TopCell.getX(), O2TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.O_TWO.setPicture(new Picture(330, 45, "tile1.png"));
+                        System.out.println("apagou esta shit");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 410 + PADDING && e.getX() <= 505 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O3TopCell.equals(Piece.O_THREE.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O3TopCell;
-                    Picture coverUp = new Picture(O3TopCell.getX(), O2TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.O_THREE.setPicture(new Picture(430, 45, "tile1.png"));
-                    System.out.println("apagou esta bosta");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+            if ((e.getX() >= 410 + PADDING && e.getX() <= 505 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O3TopCell.equals(Piece.O_THREE.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O3TopCell;
+                        Picture coverUp = new Picture(O3TopCell.getX(), O2TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.O_THREE.setPicture(new Picture(430, 45, "tile1.png"));
+                        System.out.println("apagou esta bosta");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 510 + PADDING && e.getX() <= 605 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O4TopCell.equals(Piece.O_FOUR.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O4TopCell;
-                    Picture coverUp = new Picture(O4TopCell.getX(), O4TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    //Piece.O_FOUR.setPicture(new Picture(530, 45, "tile1.png"));
-                    System.out.println("apagou este esterco");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+            if ((e.getX() >= 510 + PADDING && e.getX() <= 605 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O4TopCell.equals(Piece.O_FOUR.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O4TopCell;
+                        Picture coverUp = new Picture(O4TopCell.getX(), O4TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        //Piece.O_FOUR.setPicture(new Picture(530, 45, "tile1.png"));
+                        System.out.println("apagou este esterco");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 610 + PADDING && e.getX() <= 705 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O5TopCell.equals(Piece.O_FIVE.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O5TopCell;
-                    Picture coverUp = new Picture(O5TopCell.getX(), O5TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.O_FIVE.setPicture(new Picture(630, 45, "tile1.png"));
-                    System.out.println("apagou este estrume");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+            if ((e.getX() >= 610 + PADDING && e.getX() <= 705 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O5TopCell.equals(Piece.O_FIVE.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O5TopCell;
+                        Picture coverUp = new Picture(O5TopCell.getX(), O5TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.O_FIVE.setPicture(new Picture(630, 45, "tile1.png"));
+                        System.out.println("apagou este estrume");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 710 + PADDING && e.getX() <= 805 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
-            if (O6TopCell.equals(Piece.O_SIX.getPicture())) {
-                if (clickCounterO % 2 == 0) {
-                    currentPicture = O6TopCell;
-                    Picture coverUp = new Picture(O6TopCell.getX(), O6TopCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.O_SIX.setPicture(new Picture(730, 45, "tile1.png"));
-                    System.out.println("apagou esta dejecto");
-                    clickCounterO++;
-                    System.out.println(clickCounterO);
-                    return;
+            if ((e.getX() >= 710 + PADDING && e.getX() <= 805 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
+                if (O6TopCell.equals(Piece.O_SIX.getPicture())) {
+                    if (clickCounterO % 2 == 0) {
+                        currentPicture = O6TopCell;
+                        Picture coverUp = new Picture(O6TopCell.getX(), O6TopCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.O_SIX.setPicture(new Picture(730, 45, "tile1.png"));
+                        System.out.println("apagou esta dejecto");
+                        clickCounterO++;
+                        System.out.println(clickCounterO);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
         }
 
         /** ----- BOTTOM ROW CELLS ----- **/
-        if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X1BotCell.equals(Piece.X_ONE.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X1BotCell;
-                    Picture coverUp = new Picture(X1BotCell.getX(), X1BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_ONE.setPicture(new Picture(230, 675, "tile1.png"));
-                    System.out.println("apagou esta coiso");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+        if (playerXturn) {
+            if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X1BotCell.equals(Piece.X_ONE.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X1BotCell;
+                        Picture coverUp = new Picture(X1BotCell.getX(), X1BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_ONE.setPicture(new Picture(230, 675, "tile1.png"));
+                        System.out.println("apagou esta coiso");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 310 + PADDING && e.getX() <= 405 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X2BotCell.equals(Piece.X_TWO.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X2BotCell;
-                    Picture coverUp = new Picture(X2BotCell.getX(), X2BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_TWO.setPicture(new Picture(330, 675, "tile1.png"));
-                    System.out.println("apagou esta cena");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+            if ((e.getX() >= 310 + PADDING && e.getX() <= 405 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X2BotCell.equals(Piece.X_TWO.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X2BotCell;
+                        Picture coverUp = new Picture(X2BotCell.getX(), X2BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_TWO.setPicture(new Picture(330, 675, "tile1.png"));
+                        System.out.println("apagou esta cena");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 410 + PADDING && e.getX() <= 505 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X3BotCell.equals(Piece.X_THREE.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X3BotCell;
-                    Picture coverUp = new Picture(X3BotCell.getX(), X3BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_THREE.setPicture(new Picture(430, 675, "tile1.png"));
-                    System.out.println("apagou esta banhada");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+            if ((e.getX() >= 410 + PADDING && e.getX() <= 505 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X3BotCell.equals(Piece.X_THREE.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X3BotCell;
+                        Picture coverUp = new Picture(X3BotCell.getX(), X3BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_THREE.setPicture(new Picture(430, 675, "tile1.png"));
+                        System.out.println("apagou esta banhada");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 510 + PADDING && e.getX() <= 605 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X4BotCell.equals(Piece.X_FOUR.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X4BotCell;
-                    Picture coverUp = new Picture(X4BotCell.getX(), X4BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_FOUR.setPicture(new Picture(530, 675, "tile1.png"));
-                    System.out.println("apagou esta necessidade fisiológica");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+            if ((e.getX() >= 510 + PADDING && e.getX() <= 605 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X4BotCell.equals(Piece.X_FOUR.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X4BotCell;
+                        Picture coverUp = new Picture(X4BotCell.getX(), X4BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_FOUR.setPicture(new Picture(530, 675, "tile1.png"));
+                        System.out.println("apagou esta necessidade fisiológica");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 610 + PADDING && e.getX() <= 705 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X5BotCell.equals(Piece.X_FIVE.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X5BotCell;
-                    Picture coverUp = new Picture(X5BotCell.getX(), X5BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_FIVE.setPicture(new Picture(630, 675, "tile1.png"));
-                    System.out.println("apagou esta bdfsdf");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+            if ((e.getX() >= 610 + PADDING && e.getX() <= 705 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X5BotCell.equals(Piece.X_FIVE.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X5BotCell;
+                        Picture coverUp = new Picture(X5BotCell.getX(), X5BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_FIVE.setPicture(new Picture(630, 675, "tile1.png"));
+                        System.out.println("apagou esta bdfsdf");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
-        }
-        if ((e.getX() >= 710 + PADDING && e.getX() <= 805 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
-            if (X6BotCell.equals(Piece.X_SIX.getPicture())) {
-                if (clickCounterX % 2 == 0) {
-                    currentPicture = X6BotCell;
-                    Picture coverUp = new Picture(X6BotCell.getX(), X6BotCell.getY(), "tile1.png");
-                    coverUp.draw();
-                    Piece.X_SIX.setPicture(new Picture(730, 675, "tile1.png"));
-                    System.out.println("apagou esta nhenehe");
-                    clickCounterX++;
-                    System.out.println(clickCounterX);
-                    return;
+            if ((e.getX() >= 710 + PADDING && e.getX() <= 805 + PADDING) && (e.getY() >= 695 + PADDING && e.getY() <= 795 + PADDING)) {
+                if (X6BotCell.equals(Piece.X_SIX.getPicture())) {
+                    if (clickCounterX % 2 == 0) {
+                        currentPicture = X6BotCell;
+                        Picture coverUp = new Picture(X6BotCell.getX(), X6BotCell.getY(), "tile1.png");
+                        coverUp.draw();
+                        Piece.X_SIX.setPicture(new Picture(730, 675, "tile1.png"));
+                        System.out.println("apagou esta nhenehe");
+                        clickCounterX++;
+                        System.out.println(clickCounterX);
+                        return;
+                    }
+                    System.out.println("impossível obter peça");
                 }
-                System.out.println("impossível obter peça");
             }
         }
 
@@ -1310,7 +1316,16 @@ public class Controls implements MouseHandler, KeyboardHandler{
         if (Owins) {
             System.out.println("OOOOOOOOOOOOOOO");
         }
+        if (turnCounter % 2 == 0) {
+            playerXturn = false;
+            playerOturn = true;
+        }
+        if (turnCounter % 2 != 0) {
+            playerXturn = true;
+            playerOturn = false;
+        }
 
+        turnCounter++;
 
         Position pos = new Position(board.xToCol((e.getX())), board.yToRow(e.getY()));
 
