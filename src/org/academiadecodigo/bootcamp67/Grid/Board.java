@@ -58,11 +58,11 @@ public class Board implements Grid {
     }
 
     public double yToRow(double y) {
-        return y / CELL_SIZE + PADDING;
+        return (y / CELL_SIZE) + PADDING;
     }
 
     public double xToCol(double x) {
-        return x / CELL_SIZE + PADDING;
+        return (x / CELL_SIZE) + PADDING;
     }
 
     public double getY() {
