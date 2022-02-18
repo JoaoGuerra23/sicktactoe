@@ -1421,6 +1421,8 @@ public class Controls implements MouseHandler, KeyboardHandler {
                 || (row1col1BoardCellType.equals("X") && row2col2BoardCellType.equals("X") && row3col3BoardCellType.equals("X"))        // TOPLEFT DIAG
                 || (row1col3BoardCellType.equals("X") && row2col2BoardCellType.equals("X") && row3col1BoardCellType.equals("X")))) {    // BOTLEFT DIAG
             Xwins = true;
+            System.out.println("X - D Generation X - Triple X and Shawn Michaels");
+            return;
         }
         if ((row1col1BoardCellType.equals("O") && row1col2BoardCellType.equals("O") && row1col3BoardCellType.equals("O")                // TOP ROW
                 || (row2col1BoardCellType.equals("O") && row2col2BoardCellType.equals("O") && row2col3BoardCellType.equals("O"))        // MID ROW
@@ -1431,6 +1433,8 @@ public class Controls implements MouseHandler, KeyboardHandler {
                 || (row1col1BoardCellType.equals("O") && row2col2BoardCellType.equals("O") && row3col3BoardCellType.equals("O"))        // TOPLEFT DIAG
                 || (row1col3BoardCellType.equals("O") && row2col2BoardCellType.equals("O") && row3col1BoardCellType.equals("O")))) {    // BOTLEFT DIAG
             Owins = true;
+            System.out.println("O - Oh madafaka oh oh ohhhhh");
+            return;
         }
         if (turnCounter == 12) {
             System.out.println("E - É uma gravata!");

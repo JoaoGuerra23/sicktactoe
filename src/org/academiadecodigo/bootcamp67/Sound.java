@@ -13,7 +13,7 @@ public class Sound {
     private Clip gameOver;
 
     public void startMenuMusic() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("resources/music.wav"));
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("resources/GameMusic.wav"));
         Clip clip = AudioSystem.getClip();
         clip.open(audioIn);
         clip.start();
