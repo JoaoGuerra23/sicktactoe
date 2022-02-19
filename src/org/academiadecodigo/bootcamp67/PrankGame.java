@@ -1,37 +1,73 @@
 package org.academiadecodigo.bootcamp67;
 
+import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
-import org.academiadecodigo.simplegraphics.mouse.Mouse;
-import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
-import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
-import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
+import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
+import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
+import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
+import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
 
-import static org.academiadecodigo.bootcamp67.Grid.Grid.PADDING;
+import java.util.Random;
 
-public class PrankGame implements MouseHandler {
+import static org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent.*;
+
+public class PrankGame implements KeyboardHandler {
 
     public static final int CELLSIZE = 200;
-    public static final int PADDING = 10;
 
-    private Rectangle[][] matrix = new Rectangle[3][3];
-    private int cols = 3;
-    private int rows = 3;
+    private final Rectangle[][] matrix = new Rectangle[3][3];
+    private final int cols = 3;
+    private final int rows = 3;
+    private Keyboard keyboard;
+    private Game game;
+    private boolean turn = new Random().nextBoolean();
+    private boolean isFinished = false;
+    private boolean used = false;
 
     public PrankGame () {
+        this.keyboard = new Keyboard(this);
+        gridMatrix();
     }
 
-    public void initializer() {
-        Mouse mouse = new Mouse(this);
-        mouse.addEventListener(MouseEventType.MOUSE_CLICKED);
-        gridMatrix();
+    public void init() {
+        int[] keys = {KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_L};
+        for (int key : keys) {
+            KeyboardEvent e = new KeyboardEvent();
+            e.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+            e.setKey(key);
+            keyboard.addEventListener(e);
+        }
     }
 
     public void gridMatrix() {
         for (int col = 0; col < matrix.length; col++) {
             for (int row = 0; row < matrix[col].length; row++) {
-                matrix[col][row] = new Rectangle(columnToX(col) + PADDING, rowToY(row) + PADDING, CELLSIZE, CELLSIZE);
+                matrix[col][row] = new Rectangle(columnToX(col), rowToY(row), CELLSIZE, CELLSIZE);
                 matrix[col][row].draw();
             }
+        }
+    }
+
+    public void winningCondition() {
+        if (matrix[0][0].getColor().equals(Color.RED) && matrix[1][0].getColor().equals(Color.RED) && matrix[2][0].getColor().equals(Color.RED)
+                || matrix[0][1].getColor().equals(Color.RED) && matrix[1][1].getColor().equals(Color.RED) && matrix[2][1].getColor().equals(Color.RED)
+                || matrix[0][2].getColor().equals(Color.RED) && matrix[1][2].getColor().equals(Color.RED) && matrix[2][2].getColor().equals(Color.RED)
+                || matrix[0][0].getColor().equals(Color.RED) && matrix[0][1].getColor().equals(Color.RED) && matrix[0][2].getColor().equals(Color.RED)
+                || matrix[1][0].getColor().equals(Color.RED) && matrix[1][1].getColor().equals(Color.RED) && matrix[1][2].getColor().equals(Color.RED)
+                || matrix[2][0].getColor().equals(Color.RED) && matrix[2][1].getColor().equals(Color.RED) && matrix[2][2].getColor().equals(Color.RED)
+                || matrix[0][0].getColor().equals(Color.RED) && matrix[1][1].getColor().equals(Color.RED) && matrix[2][2].getColor().equals(Color.RED)
+                || matrix[0][2].getColor().equals(Color.RED) && matrix[1][1].getColor().equals(Color.RED) && matrix[2][0].getColor().equals(Color.RED)) {
+            setFinished(true);
+        }
+        if (matrix[0][0].getColor().equals(Color.GREEN) && matrix[1][0].getColor().equals(Color.GREEN) && matrix[2][0].getColor().equals(Color.GREEN)
+                || matrix[0][1].getColor().equals(Color.GREEN) && matrix[1][1].getColor().equals(Color.GREEN) && matrix[2][1].getColor().equals(Color.GREEN)
+                || matrix[0][2].getColor().equals(Color.GREEN) && matrix[1][2].getColor().equals(Color.GREEN) && matrix[2][2].getColor().equals(Color.GREEN)
+                || matrix[0][0].getColor().equals(Color.GREEN) && matrix[0][1].getColor().equals(Color.GREEN) && matrix[0][2].getColor().equals(Color.GREEN)
+                || matrix[1][0].getColor().equals(Color.GREEN) && matrix[1][1].getColor().equals(Color.GREEN) && matrix[1][2].getColor().equals(Color.GREEN)
+                || matrix[2][0].getColor().equals(Color.GREEN) && matrix[2][1].getColor().equals(Color.GREEN) && matrix[2][2].getColor().equals(Color.GREEN)
+                || matrix[0][0].getColor().equals(Color.GREEN) && matrix[1][1].getColor().equals(Color.GREEN) && matrix[2][2].getColor().equals(Color.GREEN)
+                || matrix[0][2].getColor().equals(Color.GREEN) && matrix[1][1].getColor().equals(Color.GREEN) && matrix[2][0].getColor().equals(Color.GREEN)) {
+            setFinished(true);
         }
     }
 
@@ -43,38 +79,183 @@ public class PrankGame implements MouseHandler {
         return cols * CELLSIZE;
     }
 
-    public int getCols() {
-        return this.cols;
-    }
+    @Override
+    public void keyPressed(KeyboardEvent event) {
+        switch (event.getKey()) {
+            case KEY_1:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[0][0].setColor(Color.GREEN);
+                    matrix[0][0].fill();
+                }
+                if (!turn) {
+                    matrix[0][0].setColor(Color.RED);
+                    matrix[0][0].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_2:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[1][0].setColor(Color.GREEN);
+                    matrix[1][0].fill();
+                }
 
-    public int getRows() {
-        return this.rows;
+                if (!turn) {
+                    matrix[1][0].setColor(Color.RED);
+                    matrix[1][0].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_3:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[2][0].setColor(Color.GREEN);
+                    matrix[2][0].fill();
+                }
+
+                if (!turn) {
+                    matrix[2][0].setColor(Color.RED);
+                    matrix[2][0].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_4:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[0][1].setColor(Color.GREEN);
+                    matrix[0][1].fill();
+                }
+
+                if (!turn) {
+                    matrix[0][1].setColor(Color.RED);
+                    matrix[0][1].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_5:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[1][1].setColor(Color.GREEN);
+                    matrix[1][1].fill();
+                }
+
+                if (!turn) {
+                    matrix[1][1].setColor(Color.RED);
+                    matrix[1][1].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_6:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[2][1].setColor(Color.GREEN);
+                    matrix[2][1].fill();
+                }
+
+                if (!turn) {
+                    matrix[2][1].setColor(Color.RED);
+                    matrix[2][1].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_7:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[0][2].setColor(Color.GREEN);
+                    matrix[0][2].fill();
+                }
+
+                if (!turn) {
+                    matrix[0][2].setColor(Color.RED);
+                    matrix[0][2].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_8:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[1][2].setColor(Color.GREEN);
+                    matrix[1][2].fill();
+                }
+
+                if (!turn) {
+                    matrix[1][2].setColor(Color.RED);
+                    matrix[1][2].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_9:
+                if (isFinished) {
+                    break;
+                }
+                if (turn) {
+                    matrix[2][2].setColor(Color.GREEN);
+                    matrix[2][2].fill();
+                }
+
+                if (!turn) {
+                    matrix[2][2].setColor(Color.RED);
+                    matrix[2][2].fill();
+                }
+                toggleTurn();
+                winningCondition();
+                break;
+            case KEY_L:
+                if (used) {
+                    break;
+                }
+                for (Rectangle[] rectangles : matrix) {
+                    for (Rectangle rectangle : rectangles) {
+                        rectangle.delete();
+                        rectangle = null;
+                    }
+                }
+                setUsed(true);
+                this.keyboard = null;
+                new Game().init();
+                break;
+        }
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if ((e.getX() >= 0 && e.getX() <= 200) && (e.getY() >= 0 && e.getY() <= 200)) {
-        }
-        if ((e.getX() >= 200 && e.getX() <= 400) && (e.getY() >= 0 && e.getY() <= 200)) {
-        }
-        if ((e.getX() >= 400 && e.getX() <= 600) && (e.getY() >= 0 && e.getY() <= 200)) {
-        }
-        if ((e.getX() >= 0 && e.getX() <= 200) && (e.getY() >= 200 && e.getY() <= 400)) {
-        }
-        if ((e.getX() >= 200 && e.getX() <= 400) && (e.getY() >= 200 && e.getY() <= 400)) {
-        }
-        if ((e.getX() >= 400 && e.getX() <= 600) && (e.getY() >= 200 && e.getY() <= 400)) {
-        }
-        if ((e.getX() >= 0 && e.getX() <= 200) && (e.getY() >= 400 && e.getY() <= 600)) {
-        }
-        if ((e.getX() >= 200 && e.getX() <= 400) && (e.getY() >= 400 && e.getY() <= 600)) {
-        }
-        if ((e.getX() >= 400 && e.getX() <= 600) && (e.getY() >= 400 && e.getY() <= 600)) {
-        }
+    public void keyReleased(KeyboardEvent keyboardEvent) {
+
     }
 
-    @Override
-    public void mouseMoved(MouseEvent mouseEvent) {
+    public void toggleTurn() {
+        this.turn = !turn;
+    }
 
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 }
