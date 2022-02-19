@@ -245,9 +245,7 @@ public class Game implements MouseHandler, KeyboardHandler {
             playerXturn = !turn;
         }
 
-        System.out.println(turn);
-        System.out.println("O " + playerOturn);
-        System.out.println("X " + playerXturn);
+        System.out.println(turnCounter);
 
         if (Xwins || Owins) {
             return;
@@ -1602,7 +1600,6 @@ public class Game implements MouseHandler, KeyboardHandler {
                 || (row1col3BoardCellType.equals("X") && row2col2BoardCellType.equals("X") && row3col1BoardCellType.equals("X")))) {    // BOTLEFT DIAG
             Xwins = true;
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
-
             new Picture(PADDING + 218, PADDING + 6, "WinX.png").draw();
             System.out.println("Fire Type Wins!");
             return;
@@ -1617,7 +1614,6 @@ public class Game implements MouseHandler, KeyboardHandler {
                 || (row1col3BoardCellType.equals("O") && row2col2BoardCellType.equals("O") && row3col1BoardCellType.equals("O")))) {    // BOTLEFT DIAG
             Owins = true;
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
-
             new Picture(PADDING + 218, PADDING + 6, "WinO.png").draw();
             System.out.println("Leaf Type Wins!");
             return;
