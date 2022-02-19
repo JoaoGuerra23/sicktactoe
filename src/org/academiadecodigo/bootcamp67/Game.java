@@ -15,8 +15,8 @@ import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
 import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
+import java.io.File;
 import java.io.IOException;
 import java.security.Key;
 import java.util.Random;
@@ -40,10 +40,12 @@ public class Game implements MouseHandler, KeyboardHandler {
     private boolean turn = new Random().nextBoolean();
     private boolean playerOturn;
     private boolean playerXturn;
+    private boolean gameStarted = false;
     private Picture currentPicture;
     private Sound sound;
+    private Menu menu;
     private Keyboard keyboard;
-
+    private String prefix = "resources/";
     private String row1col1BoardCellType = "";
     private String row1col2BoardCellType = "";
     private String row1col3BoardCellType = "";
@@ -71,19 +73,34 @@ public class Game implements MouseHandler, KeyboardHandler {
         this.topRow = new TopRow();
         this.board = new Board();
         this.bottomRow = new BottomRow();
+        this.menu = new Menu();
     }
 
     public void init() {
-        KeyboardEvent eventR = new KeyboardEvent();
-        eventR.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        eventR.setKey(KEY_R);
-        keyboard.addEventListener(eventR);
+        int keys[] = {
+                KeyboardEvent.KEY_SPACE,
+                KeyboardEvent.KEY_R,
+                KeyboardEvent.KEY_S,
+                KeyboardEvent.KEY_Q
+        };
+
+        for (int key = 0; key < keys.length; key++) {
+            KeyboardEvent event = new KeyboardEvent();
+            event.setKey(keys[key]);
+            event.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+            keyboard.addEventListener(event);
+        }
 
         Mouse mouse = new Mouse(this);
         mouse.addEventListener(MouseEventType.MOUSE_CLICKED);
+
         try {
-            sound.startGameMusic();
-        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
+            sound.startMenuMusic();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
     }
@@ -177,9 +194,42 @@ public class Game implements MouseHandler, KeyboardHandler {
 
     @Override
     public void keyPressed(KeyboardEvent keyboardEvent) {
-        if (keyboardEvent.getKey() == KEY_R) {
-            System.out.println("reset");
-            resetGame();
+
+        switch(keyboardEvent.getKey()) {
+
+            case KeyboardEvent.KEY_R:
+                System.out.println("reset");
+                resetGame();
+                break;
+
+            case KeyboardEvent.KEY_SPACE:
+                sound.stopMenuMusic();
+                try {
+                    sound.startGameMusic();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedAudioFileException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                menu.deleteMenu();
+                gameStarted = true;
+                break;
+
+            case KeyboardEvent.KEY_Q:
+                System.exit(0);
+                break;
+
+            case KeyboardEvent.KEY_S:
+
+                if (!gameStarted) {
+                    sound.startStopMenuMusic();
+                } else {
+                    sound.startStopGameMusic();
+                }
+                break;
+
         }
     }
 
@@ -222,6 +272,10 @@ public class Game implements MouseHandler, KeyboardHandler {
 
         /** ----- TOP ROW CELLS ----- **/
         if (playerOturn) {
+            Picture charmander = new Picture(60, 200, "resources/charmanders.png");
+            charmander.draw();
+            Picture turn = new Picture(80, 250, "resources/turnbuttonblue.png");
+            turn.draw();
             if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
                 if (O1TopCell.equals(Piece.O_ONE.getPicture())) {
                     if (clickCounterO % 2 == 0) {
@@ -1634,4 +1688,5 @@ public class Game implements MouseHandler, KeyboardHandler {
                 ", row3col3BoardCellNum=" + row3col3BoardCellNum +
                 '}';
     }
+
 }

@@ -7,10 +7,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        //Game game = new Game();
+        Game game = new Game();
 
-        //game.init();
-        PrankGame game = new PrankGame();
-        game.initializer();
+        game.init();
+        //PrankGame game = new PrankGame();
+        //game.initializer();
     }
 }
