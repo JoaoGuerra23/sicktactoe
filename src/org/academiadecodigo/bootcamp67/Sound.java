@@ -58,10 +58,18 @@ public class Sound {
         winMusic.start();
     }
 
+    public void stopWinMusic() {
+        winMusic.stop();
+    }
+
     public void tieGameMusic() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(prefix + "endtheme.wav"));
         tieMusic = AudioSystem.getClip();
         tieMusic.open(audioIn);
         tieMusic.start();
+    }
+
+    public void stopTieMusic() {
+        tieMusic.stop();
     }
 }

@@ -40,6 +40,8 @@ public class Game implements MouseHandler, KeyboardHandler {
     private boolean playerOturn = turn;
     private boolean playerXturn = !turn;
     private boolean gameStarted = false;
+    private boolean gameWon = false;
+    private boolean gameTied = false;
     private Picture currentPicture;
     private Picture playerCharTurn;
     private Picture playerBulbTurn;
@@ -211,6 +213,22 @@ public class Game implements MouseHandler, KeyboardHandler {
         topRow.getRowPiece()[0][4].draw();
         topRow.getRowPiece()[0][5] = Piece.O_SIX.getPicture();
         topRow.getRowPiece()[0][5].draw();
+
+        if(gameWon) {
+            sound.stopWinMusic();
+        }
+        if (gameTied) {
+            sound.stopTieMusic();
+        }
+        try {
+            sound.startGameMusic();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1855,6 +1873,17 @@ public class Game implements MouseHandler, KeyboardHandler {
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
             new Picture(PADDING + 218, PADDING + 6, "WinX.png").draw();
             System.out.println("Fire Type Wins!");
+            try {
+                gameWon = true;
+                sound.stopGameMusic();
+                sound.winGameMusic();
+            } catch (LineUnavailableException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (UnsupportedAudioFileException ex) {
+                ex.printStackTrace();
+            }
             return;
         }
         if ((row1col1BoardCellType.equals("O") && row1col2BoardCellType.equals("O") && row1col3BoardCellType.equals("O")                // TOP ROW
@@ -1869,6 +1898,17 @@ public class Game implements MouseHandler, KeyboardHandler {
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
             new Picture(PADDING + 218, PADDING + 6, "WinO.png").draw();
             System.out.println("Leaf Type Wins!");
+            try {
+                gameWon = true;
+                sound.stopGameMusic();
+                sound.winGameMusic();
+            } catch (LineUnavailableException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (UnsupportedAudioFileException ex) {
+                ex.printStackTrace();
+            }
             return;
         }
 
@@ -1888,6 +1928,17 @@ public class Game implements MouseHandler, KeyboardHandler {
             X6BotCell.draw();
             new Rectangle(PADDING, PADDING, 1000, 1).fill();
             new Picture(PADDING, PADDING + 1, "Tie.png").draw();
+            sound.stopGameMusic();
+            try {
+                gameTied = true;
+                sound.tieGameMusic();
+            } catch (LineUnavailableException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (UnsupportedAudioFileException ex) {
+                ex.printStackTrace();
+            }
         }
 
     }
