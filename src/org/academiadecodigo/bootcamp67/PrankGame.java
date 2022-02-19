@@ -83,7 +83,7 @@ public class PrankGame implements KeyboardHandler {
     public void keyPressed(KeyboardEvent event) {
         switch (event.getKey()) {
             case KEY_1:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -98,7 +98,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_2:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -114,7 +114,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_3:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -130,7 +130,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_4:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -146,7 +146,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_5:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -162,7 +162,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_6:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -178,7 +178,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_7:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -194,7 +194,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_8:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {
@@ -210,7 +210,7 @@ public class PrankGame implements KeyboardHandler {
                 winningCondition();
                 break;
             case KEY_9:
-                if (isFinished) {
+                if (isFinished || used) {
                     break;
                 }
                 if (turn) {

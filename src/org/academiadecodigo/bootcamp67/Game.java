@@ -23,8 +23,7 @@ import java.util.Random;
 import java.util.random.RandomGenerator;
 
 import static org.academiadecodigo.bootcamp67.Grid.Grid.PADDING;
-import static org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent.KEY_R;
-import static org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent.KEY_SPACE;
+import static org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent.*;
 
 public class Game implements MouseHandler, KeyboardHandler {
 
@@ -38,10 +37,12 @@ public class Game implements MouseHandler, KeyboardHandler {
     private boolean Xwins = false;
     private boolean Owins = false;
     private boolean turn = new Random().nextBoolean();
-    private boolean playerOturn;
-    private boolean playerXturn;
+    private boolean playerOturn = turn;
+    private boolean playerXturn = !turn;
     private boolean gameStarted = false;
     private Picture currentPicture;
+    private Picture playerCharTurn;
+    private Picture playerBulbTurn;
     private Sound sound;
     private Menu menu;
     private Keyboard keyboard;
@@ -74,15 +75,12 @@ public class Game implements MouseHandler, KeyboardHandler {
         this.board = new Board();
         this.bottomRow = new BottomRow();
         this.menu = new Menu();
+        this.playerCharTurn = new Picture(60, 330, "charmanders.png");
+        this.playerBulbTurn = new Picture(60, 196, "bulbasaurs.png");
     }
 
     public void init() {
-        int keys[] = {
-                KeyboardEvent.KEY_SPACE,
-                KeyboardEvent.KEY_R,
-                KeyboardEvent.KEY_S,
-                KeyboardEvent.KEY_Q
-        };
+        int keys[] = {KEY_SPACE, KEY_R, KEY_S, KEY_Q};
 
         for (int key = 0; key < keys.length; key++) {
             KeyboardEvent event = new KeyboardEvent();
@@ -102,6 +100,17 @@ public class Game implements MouseHandler, KeyboardHandler {
             e.printStackTrace();
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void switchTurn() {
+        if (playerOturn) {
+            playerBulbTurn.delete();
+            playerCharTurn.draw();
+        }
+        if (playerXturn) {
+            playerCharTurn.delete();
+            playerBulbTurn.draw();
         }
     }
 
@@ -141,6 +150,18 @@ public class Game implements MouseHandler, KeyboardHandler {
         Owins = false;
         currentPicture = null;
         turn = new Random().nextBoolean();
+        playerOturn = turn;
+        playerXturn = !turn;
+        System.out.println(playerOturn + "  O");
+        System.out.println(playerXturn + "  X");
+        if (playerOturn) {
+            playerBulbTurn = new Picture(60, 196, "bulbasaurs.png");
+            playerBulbTurn.draw();
+        }
+        if (playerXturn) {
+            playerCharTurn = new Picture(60, 330, "charmanders.png");
+            playerCharTurn.draw();
+        }
         clickCounterO = 0;
         clickCounterX = 0;
         turnCounter = 0;
@@ -196,9 +217,7 @@ public class Game implements MouseHandler, KeyboardHandler {
     public void keyPressed(KeyboardEvent keyboardEvent) {
 
         switch(keyboardEvent.getKey()) {
-
             case KeyboardEvent.KEY_R:
-                System.out.println("reset");
                 resetGame();
                 break;
 
@@ -215,14 +234,19 @@ public class Game implements MouseHandler, KeyboardHandler {
                 }
                 menu.deleteMenu();
                 gameStarted = true;
+                if (playerOturn) {
+                    playerBulbTurn.draw();
+                }
+                if (playerXturn) {
+                    playerCharTurn.draw();
+                }
                 break;
 
             case KeyboardEvent.KEY_Q:
                 System.exit(0);
                 break;
 
-            case KeyboardEvent.KEY_S:
-
+            case KEY_S:
                 if (!gameStarted) {
                     sound.startStopMenuMusic();
                 } else {
@@ -240,19 +264,19 @@ public class Game implements MouseHandler, KeyboardHandler {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (turnCounter == 0) {
-            playerOturn = turn;
-            playerXturn = !turn;
-        }
-
-        System.out.println(turnCounter);
-
         if (Xwins || Owins) {
             return;
         }
         if (turnCounter == 12) {
             return;
         }
+
+        if (turnCounter == 0) {
+            playerOturn = turn;
+            playerXturn = !turn;
+        }
+
+        System.out.println(turnCounter);
 
         Picture O1TopCell = topRow.getRowPiece()[0][0];
         Picture O2TopCell = topRow.getRowPiece()[0][1];
@@ -270,16 +294,14 @@ public class Game implements MouseHandler, KeyboardHandler {
 
         /** ----- TOP ROW CELLS ----- **/
         if (playerOturn) {
-            Picture charmander = new Picture(60, 200, "resources/charmanders.png");
-            charmander.draw();
-            Picture turn = new Picture(80, 250, "resources/turnbuttonblue.png");
-            turn.draw();
             if ((e.getX() >= 210 + PADDING && e.getX() <= 305 + PADDING) && (e.getY() >= 65 + PADDING && e.getY() <= 165 + PADDING)) {
                 if (O1TopCell.equals(Piece.O_ONE.getPicture())) {
                     if (clickCounterO % 2 == 0) {
                         currentPicture = O1TopCell;
                         Picture coverUp = new Picture(O1TopCell.getX(), O1TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O1TopCell.getX(), O1TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_ONE.setPicture(new Picture(210, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -292,6 +314,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = O2TopCell;
                         Picture coverUp = new Picture(O2TopCell.getX(), O2TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O2TopCell.getX(), O2TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_TWO.setPicture(new Picture(310, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -304,6 +328,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = O3TopCell;
                         Picture coverUp = new Picture(O3TopCell.getX(), O3TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O3TopCell.getX(), O3TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_THREE.setPicture(new Picture(410, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -316,6 +342,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = O4TopCell;
                         Picture coverUp = new Picture(O4TopCell.getX(), O4TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O4TopCell.getX(), O4TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_FOUR.setPicture(new Picture(510, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -328,6 +356,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = O5TopCell;
                         Picture coverUp = new Picture(O5TopCell.getX(), O5TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O5TopCell.getX(), O5TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_FIVE.setPicture(new Picture(610, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -340,6 +370,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = O6TopCell;
                         Picture coverUp = new Picture(O6TopCell.getX(), O6TopCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(O6TopCell.getX(), O6TopCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.O_SIX.setPicture(new Picture(710, 45, "Tile.png"));
                         clickCounterO++;
                         return;
@@ -356,6 +388,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X1BotCell;
                         Picture coverUp = new Picture(X1BotCell.getX(), X1BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X1BotCell.getX(), X1BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_ONE.setPicture(new Picture(210, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -368,6 +402,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X2BotCell;
                         Picture coverUp = new Picture(X2BotCell.getX(), X2BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X2BotCell.getX(), X2BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_TWO.setPicture(new Picture(310, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -380,6 +416,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X3BotCell;
                         Picture coverUp = new Picture(X3BotCell.getX(), X3BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X3BotCell.getX(), X3BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_THREE.setPicture(new Picture(410, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -392,6 +430,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X4BotCell;
                         Picture coverUp = new Picture(X4BotCell.getX(), X4BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X4BotCell.getX(), X4BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_FOUR.setPicture(new Picture(510, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -404,6 +444,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X5BotCell;
                         Picture coverUp = new Picture(X5BotCell.getX(), X5BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X5BotCell.getX(), X5BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_FIVE.setPicture(new Picture(610, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -416,6 +458,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = X6BotCell;
                         Picture coverUp = new Picture(X6BotCell.getX(), X6BotCell.getY(), "TilePop.png");
                         coverUp.draw();
+                        Picture pokeball = new Picture(X6BotCell.getX(), X6BotCell.getY(), "Pokeball.png");
+                        pokeball.draw();
                         Piece.X_SIX.setPicture(new Picture(710, 675, "Tile.png"));
                         clickCounterX++;
                         return;
@@ -437,6 +481,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.X_ONE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row1col1BoardCellNum) {
@@ -447,6 +493,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.X_TWO.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row1col1BoardCellNum) {
@@ -457,6 +505,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.X_THREE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row1col1BoardCellNum) {
@@ -467,6 +517,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.X_FOUR.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row1col1BoardCellNum) {
@@ -476,6 +528,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellType = "X";
                         row1col1BoardCellNum = Piece.X_FIVE.getValue();
                         clickCounterX++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row1col1BoardCellNum) {
@@ -486,6 +540,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.X_SIX.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -498,6 +554,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_ONE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row1col1BoardCellNum) {
@@ -508,6 +566,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_TWO.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row1col1BoardCellNum) {
@@ -518,6 +578,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_THREE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row1col1BoardCellNum) {
@@ -528,6 +590,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_FOUR.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row1col1BoardCellNum) {
@@ -538,6 +602,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_FIVE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row1col1BoardCellNum) {
@@ -548,9 +614,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col1BoardCellNum = Piece.O_SIX.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -565,6 +632,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_ONE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row1col2BoardCellNum) {
@@ -575,6 +644,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_TWO.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row1col2BoardCellNum) {
@@ -585,6 +656,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_THREE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row1col2BoardCellNum) {
@@ -595,6 +668,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_FOUR.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row1col2BoardCellNum) {
@@ -605,6 +680,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_FIVE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row1col2BoardCellNum) {
@@ -616,6 +693,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.X_SIX.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -628,6 +707,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_ONE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row1col2BoardCellNum) {
@@ -638,6 +719,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_TWO.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row1col2BoardCellNum) {
@@ -648,6 +731,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_THREE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row1col2BoardCellNum) {
@@ -658,6 +743,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_FOUR.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row1col2BoardCellNum) {
@@ -668,6 +755,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_FIVE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row1col2BoardCellNum) {
@@ -678,9 +767,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col2BoardCellNum = Piece.O_SIX.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -695,6 +785,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_ONE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row1col3BoardCellNum) {
@@ -705,6 +797,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_TWO.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row1col3BoardCellNum) {
@@ -715,6 +809,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_THREE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row1col3BoardCellNum) {
@@ -725,6 +821,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_FOUR.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row1col3BoardCellNum) {
@@ -735,6 +833,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_FIVE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row1col3BoardCellNum) {
@@ -745,6 +845,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.X_SIX.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -757,6 +859,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_ONE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row1col3BoardCellNum) {
@@ -767,6 +871,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_TWO.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row1col3BoardCellNum) {
@@ -777,6 +883,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_THREE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row1col3BoardCellNum) {
@@ -787,6 +895,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_FOUR.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row1col3BoardCellNum) {
@@ -797,6 +907,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_FIVE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row1col3BoardCellNum) {
@@ -807,9 +919,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row1col3BoardCellNum = Piece.O_SIX.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
 
@@ -826,6 +939,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_ONE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row2col1BoardCellNum) {
@@ -836,6 +951,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_TWO.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row2col1BoardCellNum) {
@@ -846,6 +963,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_THREE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row2col1BoardCellNum) {
@@ -856,6 +975,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_FOUR.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row2col1BoardCellNum) {
@@ -866,6 +987,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_FIVE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row2col1BoardCellNum) {
@@ -876,6 +999,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.X_SIX.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -888,6 +1013,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_ONE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row2col1BoardCellNum) {
@@ -898,6 +1025,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_TWO.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row2col1BoardCellNum) {
@@ -908,6 +1037,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_THREE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row2col1BoardCellNum) {
@@ -918,6 +1049,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_FOUR.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row2col1BoardCellNum) {
@@ -928,6 +1061,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_FIVE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row2col1BoardCellNum) {
@@ -938,9 +1073,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col1BoardCellNum = Piece.O_SIX.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -955,6 +1091,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_ONE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row2col2BoardCellNum) {
@@ -965,6 +1103,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_TWO.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row2col2BoardCellNum) {
@@ -975,6 +1115,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_THREE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row2col2BoardCellNum) {
@@ -985,6 +1127,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_FOUR.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row2col2BoardCellNum) {
@@ -995,6 +1139,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_FIVE.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row2col2BoardCellNum) {
@@ -1006,6 +1152,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.X_SIX.getValue();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -1018,6 +1166,7 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_ONE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row2col2BoardCellNum) {
@@ -1028,6 +1177,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_TWO.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row2col2BoardCellNum) {
@@ -1038,6 +1189,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_THREE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row2col2BoardCellNum) {
@@ -1048,6 +1201,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_FOUR.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row2col2BoardCellNum) {
@@ -1058,6 +1213,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_FIVE.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row2col2BoardCellNum) {
@@ -1068,9 +1225,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         row2col2BoardCellNum = Piece.O_SIX.getValue();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -1085,6 +1243,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row2col3BoardCellNum) {
@@ -1095,6 +1255,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row2col3BoardCellNum) {
@@ -1105,6 +1267,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row2col3BoardCellNum) {
@@ -1115,6 +1279,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row2col3BoardCellNum) {
@@ -1125,6 +1291,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row2col3BoardCellNum) {
@@ -1135,6 +1303,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -1147,6 +1317,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row2col3BoardCellNum) {
@@ -1157,6 +1329,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row2col3BoardCellNum) {
@@ -1167,6 +1341,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row2col3BoardCellNum) {
@@ -1177,6 +1353,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row2col3BoardCellNum) {
@@ -1187,6 +1365,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row2col3BoardCellNum) {
@@ -1197,9 +1377,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
 
@@ -1216,6 +1397,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row3col1BoardCellNum) {
@@ -1226,6 +1409,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row3col1BoardCellNum) {
@@ -1236,6 +1421,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row3col1BoardCellNum) {
@@ -1246,6 +1433,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row3col1BoardCellNum) {
@@ -1256,6 +1445,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row3col1BoardCellNum) {
@@ -1266,6 +1457,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -1278,6 +1471,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row3col1BoardCellNum) {
@@ -1288,6 +1483,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row3col1BoardCellNum) {
@@ -1295,6 +1492,11 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture = new Picture(325, 495, Piece.O_THREE.getImageFile());
                         row3col1BoardCellType = "O";
                         row3col1BoardCellNum = Piece.O_THREE.getValue();
+                        currentPicture.draw();
+                        clickCounterO++;
+                        turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row3col1BoardCellNum) {
@@ -1305,6 +1507,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row3col1BoardCellNum) {
@@ -1315,6 +1519,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row3col1BoardCellNum) {
@@ -1325,9 +1531,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -1342,6 +1549,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row3col2BoardCellNum) {
@@ -1352,6 +1561,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row3col2BoardCellNum) {
@@ -1362,6 +1573,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row3col2BoardCellNum) {
@@ -1372,6 +1585,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row3col2BoardCellNum) {
@@ -1382,6 +1597,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row3col2BoardCellNum) {
@@ -1392,6 +1609,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -1404,6 +1623,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row3col2BoardCellNum) {
@@ -1414,6 +1635,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row3col2BoardCellNum) {
@@ -1424,6 +1647,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row3col2BoardCellNum) {
@@ -1434,6 +1659,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row3col2BoardCellNum) {
@@ -1444,6 +1671,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row3col2BoardCellNum) {
@@ -1454,9 +1683,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
         if ((clickCounterX % 2 != 0) || (clickCounterO % 2 != 0)) {
@@ -1471,6 +1701,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_TWO.getValue() > row3col3BoardCellNum) {
@@ -1481,6 +1713,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_THREE.getValue() > row3col3BoardCellNum) {
@@ -1491,6 +1725,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FOUR.getValue() > row3col3BoardCellNum) {
@@ -1501,6 +1737,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_FIVE.getValue() > row3col3BoardCellNum) {
@@ -1511,6 +1749,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.X_SIX.getValue() > row3col3BoardCellNum) {
@@ -1521,6 +1761,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterX++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
 
@@ -1533,6 +1775,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_TWO.getValue() > row3col3BoardCellNum) {
@@ -1543,6 +1787,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_THREE.getValue() > row3col3BoardCellNum) {
@@ -1553,6 +1799,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FOUR.getValue() > row3col3BoardCellNum) {
@@ -1563,6 +1811,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_FIVE.getValue() > row3col3BoardCellNum) {
@@ -1573,6 +1823,8 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
                 if (Piece.O_SIX.getValue() > row3col3BoardCellNum) {
@@ -1583,9 +1835,10 @@ public class Game implements MouseHandler, KeyboardHandler {
                         currentPicture.draw();
                         clickCounterO++;
                         turnCounter++;
+                        switchTurn();
+                        toggleTurn();
                     }
                 }
-                toggleTurn();
             }
         }
 

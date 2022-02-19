@@ -19,6 +19,8 @@ public class Background implements Grid {
         quitButton.draw();
         Picture resetButton = new Picture(870, 100, prefix + "resetbutton.png");
         resetButton.draw();
+        Picture turn = new Picture(80, 250, "turnbuttonblue.png");
+        turn.draw();
     }
 
     public double rowToY(double rows) {
