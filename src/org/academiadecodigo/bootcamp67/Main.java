@@ -7,16 +7,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        Game game = new Game();
+        //Game game = new Game();
 
-        try {
-            game.initializer();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //game.init();
+        PrankGame game = new PrankGame();
+        game.initializer();
     }
 }

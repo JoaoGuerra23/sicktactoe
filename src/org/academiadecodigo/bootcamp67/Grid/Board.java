@@ -17,10 +17,10 @@ public class Board implements Grid {
         double UPPER_LIMIT_DIST = 17.5;
         Rectangle board = new Rectangle(PADDING + (LEFT_LIMIT_DIST * CELL_SIZE), PADDING + (UPPER_LIMIT_DIST * CELL_SIZE), WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
         Picture boardBig = new Picture(PADDING + (LEFT_LIMIT_DIST * CELL_SIZE), PADDING + (UPPER_LIMIT_DIST * CELL_SIZE), "TileBigPop.png");
-        //Picture boardFrame = new Picture(PADDING + (LEFT_LIMIT_DIST * CELL_SIZE), PADDING + (UPPER_LIMIT_DIST * CELL_SIZE), "BoardFrame.png");
+        Picture boardFrame = new Picture(PADDING + (LEFT_LIMIT_DIST * CELL_SIZE), PADDING + (UPPER_LIMIT_DIST * CELL_SIZE), "BoardFrame.png");
         board.draw();
         boardBig.draw();
-        //boardFrame.draw();
+        boardFrame.draw();
         createCells();
     }
 
