@@ -28,6 +28,7 @@ public class Game implements MouseHandler, KeyboardHandler {
     private int clickCounterX = 0;
     private int clickCounterO = 0;
     private int turnCounter = 0;
+
     private boolean Xwins = false;
     private boolean Owins = false;
     private boolean turn = new Random().nextBoolean();
@@ -36,13 +37,14 @@ public class Game implements MouseHandler, KeyboardHandler {
     private boolean gameStarted = false;
     private boolean gameWon = false;
     private boolean gameTied = false;
+
     private Picture currentPicture;
     private Picture playerCharTurn;
     private Picture playerBulbTurn;
     private Sound sound;
     private Menu menu;
     private Keyboard keyboard;
-    private String prefix = "";
+
     private String row1col1BoardCellType = "";
     private String row1col2BoardCellType = "";
     private String row1col3BoardCellType = "";
@@ -144,6 +146,7 @@ public class Game implements MouseHandler, KeyboardHandler {
         turn = new Random().nextBoolean();
         playerOturn = turn;
         playerXturn = !turn;
+
         if (playerOturn) {
             playerBulbTurn = new Picture(60, 196, "bulbasaurs.png");
             playerBulbTurn.draw();
@@ -205,9 +208,11 @@ public class Game implements MouseHandler, KeyboardHandler {
         sound.stopGameMusic();
         if(gameWon) {
             sound.stopWinMusic();
+            gameWon = false;
         }
         if (gameTied) {
             sound.stopTieMusic();
+            gameTied = false;
         }
         try {
             sound.startGameMusic();
@@ -248,11 +253,14 @@ public class Game implements MouseHandler, KeyboardHandler {
             case KEY_S:
                 if (!gameStarted) {
                     sound.startStopMenuMusic();
-                } else {
+                } else if(gameWon){
+                    sound.startStopWinMusic();
+                } else if(gameTied){
+                    sound.startStopTieMusic();
+                } else{
                     sound.startStopGameMusic();
                 }
                 break;
-
         }
     }
 
@@ -683,7 +691,6 @@ public class Game implements MouseHandler, KeyboardHandler {
                 }
                 if (Piece.X_SIX.getValue() > row1col2BoardCellNum) {
                     if (currentPicture.equals(X6BotCell)) {
-                        System.out.println("clicou");
                         currentPicture = new Picture(460, 225, Piece.X_SIX.getImageFile());
                         currentPicture.draw();
                         row1col2BoardCellType = "X";

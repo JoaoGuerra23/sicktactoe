@@ -106,4 +106,20 @@ public class Sound {
     public void stopTieMusic() {
         tieMusic.stop();
     }
+
+    public void startStopTieMusic() {
+        if (tieMusic.isRunning()) {
+            tieMusic.stop();
+        } else {
+            tieMusic.start();
+        }
+    }
+
+    public void startStopWinMusic() {
+        if (winMusic.isRunning()) {
+            winMusic.stop();
+        } else {
+            winMusic.start();
+        }
+    }
 }

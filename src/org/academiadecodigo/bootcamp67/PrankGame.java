@@ -16,10 +16,7 @@ public class PrankGame implements KeyboardHandler {
     public static final int CELLSIZE = 200;
 
     private final Rectangle[][] matrix = new Rectangle[3][3];
-    private final int cols = 3;
-    private final int rows = 3;
     private Keyboard keyboard;
-    private Game game;
     private boolean turn = new Random().nextBoolean();
     private boolean isFinished = false;
     private boolean used = false;
@@ -237,6 +234,16 @@ public class PrankGame implements KeyboardHandler {
                 }
                 setUsed(true);
                 this.keyboard = null;
+                System.out.println("....................../´¯/)\n" +
+                        "....................,/¯../\n" +
+                        ".................../..../\n" +
+                        "............./´¯/'...'/´¯¯`·¸\n" +
+                        "........../'/.../..../......./¨¯\\\n" +
+                        "........('(...´...´.... ¯~/'...')\n" +
+                        ".........\\.................'...../\n" +
+                        "..........''...\\.......... _.·´\n" +
+                        "............\\..............(\n" +
+                        "..............\\.............\\...");
                 new Game().init();
                 break;
         }

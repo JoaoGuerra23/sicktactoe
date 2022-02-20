@@ -7,7 +7,6 @@ import org.academiadecodigo.simplegraphics.pictures.Picture;
 public class Board implements Grid {
 
     private final Rectangle[][] cells = new Rectangle[3][3];
-
     private final Picture[][] boardImages = new Picture[3][3];
 
     public Board() {

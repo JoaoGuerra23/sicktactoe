@@ -8,7 +8,6 @@ import org.academiadecodigo.simplegraphics.pictures.Picture;
 public class TopRow implements Grid {
 
     private final Rectangle[][] cells = new Rectangle[1][6];
-
     private final Picture[][] rowImages = new Picture[1][6];
     private final Picture[][] rowPiece = new Picture[1][6];
 
