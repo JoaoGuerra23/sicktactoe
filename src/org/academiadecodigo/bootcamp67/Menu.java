@@ -44,8 +44,6 @@ public class Menu implements Grid {
         soundOnOff.delete();
         edition.delete();
         frame.delete();
-
-
     }
 
     @Override

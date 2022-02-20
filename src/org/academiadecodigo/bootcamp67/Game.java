@@ -1,9 +1,6 @@
 package org.academiadecodigo.bootcamp67;
 
-import jdk.swing.interop.SwingInterOpUtils;
 import org.academiadecodigo.bootcamp67.Grid.*;
-import org.academiadecodigo.simplegraphics.graphics.Canvas;
-import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
@@ -16,11 +13,8 @@ import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.util.Random;
-import java.util.random.RandomGenerator;
 
 import static org.academiadecodigo.bootcamp67.Grid.Grid.PADDING;
 import static org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent.*;
@@ -48,7 +42,7 @@ public class Game implements MouseHandler, KeyboardHandler {
     private Sound sound;
     private Menu menu;
     private Keyboard keyboard;
-    private String prefix = "resources/";
+    private String prefix = "";
     private String row1col1BoardCellType = "";
     private String row1col2BoardCellType = "";
     private String row1col3BoardCellType = "";
@@ -82,7 +76,7 @@ public class Game implements MouseHandler, KeyboardHandler {
     }
 
     public void init() {
-        int keys[] = {KEY_SPACE, KEY_R, KEY_S, KEY_Q};
+        int[] keys = {KEY_SPACE, KEY_R, KEY_S, KEY_Q};
 
         for (int key = 0; key < keys.length; key++) {
             KeyboardEvent event = new KeyboardEvent();
@@ -96,11 +90,7 @@ public class Game implements MouseHandler, KeyboardHandler {
 
         try {
             sound.startMenuMusic();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -154,8 +144,6 @@ public class Game implements MouseHandler, KeyboardHandler {
         turn = new Random().nextBoolean();
         playerOturn = turn;
         playerXturn = !turn;
-        System.out.println(playerOturn + "  O");
-        System.out.println(playerXturn + "  X");
         if (playerOturn) {
             playerBulbTurn = new Picture(60, 196, "bulbasaurs.png");
             playerBulbTurn.draw();
@@ -214,6 +202,7 @@ public class Game implements MouseHandler, KeyboardHandler {
         topRow.getRowPiece()[0][5] = Piece.O_SIX.getPicture();
         topRow.getRowPiece()[0][5].draw();
 
+        sound.stopGameMusic();
         if(gameWon) {
             sound.stopWinMusic();
         }
@@ -222,11 +211,7 @@ public class Game implements MouseHandler, KeyboardHandler {
         }
         try {
             sound.startGameMusic();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
     }
@@ -243,11 +228,7 @@ public class Game implements MouseHandler, KeyboardHandler {
                 sound.stopMenuMusic();
                 try {
                     sound.startGameMusic();
-                } catch (LineUnavailableException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedAudioFileException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
                     e.printStackTrace();
                 }
                 menu.deleteMenu();
@@ -293,8 +274,6 @@ public class Game implements MouseHandler, KeyboardHandler {
             playerOturn = turn;
             playerXturn = !turn;
         }
-
-        System.out.println(turnCounter);
 
         Picture O1TopCell = topRow.getRowPiece()[0][0];
         Picture O2TopCell = topRow.getRowPiece()[0][1];
@@ -1872,16 +1851,11 @@ public class Game implements MouseHandler, KeyboardHandler {
             Xwins = true;
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
             new Picture(PADDING + 218, PADDING + 6, "WinX.png").draw();
-            System.out.println("Fire Type Wins!");
             try {
                 gameWon = true;
                 sound.stopGameMusic();
                 sound.winGameMusic();
-            } catch (LineUnavailableException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (UnsupportedAudioFileException ex) {
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
                 ex.printStackTrace();
             }
             return;
@@ -1897,16 +1871,11 @@ public class Game implements MouseHandler, KeyboardHandler {
             Owins = true;
             new Rectangle(PADDING + 215, PADDING + 2, 570, 797).fill();
             new Picture(PADDING + 218, PADDING + 6, "WinO.png").draw();
-            System.out.println("Leaf Type Wins!");
             try {
                 gameWon = true;
                 sound.stopGameMusic();
                 sound.winGameMusic();
-            } catch (LineUnavailableException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (UnsupportedAudioFileException ex) {
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
                 ex.printStackTrace();
             }
             return;
@@ -1932,11 +1901,7 @@ public class Game implements MouseHandler, KeyboardHandler {
             try {
                 gameTied = true;
                 sound.tieGameMusic();
-            } catch (LineUnavailableException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (UnsupportedAudioFileException ex) {
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -1952,41 +1917,4 @@ public class Game implements MouseHandler, KeyboardHandler {
     public void mouseMoved(MouseEvent mouseEvent) {
 
     }
-
-    @Override
-    public String toString() {
-        return "Game{" +
-                "background=" + background +
-                ", board=" + board +
-                ", topRow=" + topRow +
-                ", bottomRow=" + bottomRow +
-                ", clickCounterX=" + clickCounterX +
-                ", clickCounterO=" + clickCounterO +
-                ", turnCounter=" + turnCounter +
-                ", Xwins=" + Xwins +
-                ", Owins=" + Owins +
-                ", currentPicture=" + currentPicture +
-                ", sound=" + sound +
-                ", keyboard=" + keyboard +
-                ", row1col1BoardCellType='" + row1col1BoardCellType + '\'' +
-                ", row1col2BoardCellType='" + row1col2BoardCellType + '\'' +
-                ", row1col3BoardCellType='" + row1col3BoardCellType + '\'' +
-                ", row2col1BoardCellType='" + row2col1BoardCellType + '\'' +
-                ", row2col2BoardCellType='" + row2col2BoardCellType + '\'' +
-                ", row2col3BoardCellType='" + row2col3BoardCellType + '\'' +
-                ", row3col1BoardCellType='" + row3col1BoardCellType + '\'' +
-                ", row3col2BoardCellType='" + row3col2BoardCellType + '\'' +
-                ", row3col3BoardCellType='" + row3col3BoardCellType + '\'' +
-                ", row1col1BoardCellNum=" + row1col1BoardCellNum +
-                ", row1col2BoardCellNum=" + row1col2BoardCellNum +
-                ", row1col3BoardCellNum=" + row1col3BoardCellNum +
-                ", row2col1BoardCellNum=" + row2col1BoardCellNum +
-                ", row2col2BoardCellNum=" + row2col2BoardCellNum +
-                ", row2col3BoardCellNum=" + row2col3BoardCellNum +
-                ", row3col1BoardCellNum=" + row3col1BoardCellNum +
-                ", row3col2BoardCellNum=" + row3col2BoardCellNum +
-                ", row3col3BoardCellNum=" + row3col3BoardCellNum +
-                '}';
-    }
-
 }

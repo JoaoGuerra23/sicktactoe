@@ -5,7 +5,7 @@ import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public class Background implements Grid {
 
-    private String prefix = "resources/";
+    private String prefix = "";
     public Background() {
         int WIDTH = 100;
         int HEIGHT = 80;
